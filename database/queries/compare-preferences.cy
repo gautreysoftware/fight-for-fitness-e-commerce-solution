@@ -23,11 +23,11 @@ RETURN me.companyName, them.companyName, r.similarity
 ORDER BY r.similarity DESC 
 LIMIT 10
 
-WITH 1 as neighbours
+WITH 1 AS neighbours
 MATCH (me:Customer)-[:SIMILARITY]->(c:Customer)-[r:RATED]->(p:Product)
 WHERE me.customerID = 'ANTON' and NOT ( (me)-[:RATED|PRODUCT|ORDER*1..2]->(p:Product) )
-WITH p, COLLECT(r.rating)[0..neighbours] as ratings, collect(c.companyName)[0..neighbours] as customers
-WITH p, customers, REDUCE(s=0,i in ratings | s+i) / LENGTH(ratings)  as recommendation
+WITH p, COLLECT(r.rating)[0..neighbours] AS ratings, collect(c.companyName)[0..neighbours] AS customers
+WITH p, customers, REDUCE(s=0,i in ratings | s+i) / LENGTH(ratings) AS recommendation
 ORDER BY recommendation DESC
 RETURN p.productName, customers, recommendation 
 LIMIT 10
